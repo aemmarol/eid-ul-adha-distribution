@@ -1,13 +1,35 @@
-import { Button, Card, Form, Input, Spin } from "antd";
+import { Button, Card, Form, Input, message, Spin } from "antd";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { login } from "./api/login";
 
-export default function Home() {
-	const [showLoader, setshowLoader] = useState(true)
+export default function Login() {
+	const [loginForm] = Form.useForm();
+	const router = useRouter()
+
+	const [showLoader, setshowLoader] = useState(false);
+
+	useEffect(()=>{
+		const user = JSON.parse(localStorage.getItem("user"));
+		if(user){
+			router.push("/list")
+		}
+	},[])
+
 	const onFinish = async (values) => {
-
-		console.log('Success:', values);
+		setshowLoader(true)
+		const loginResult = await login(values.its);
+		if (loginResult.type === "success") {
+			loginForm.resetFields();
+			localStorage.setItem("user",JSON.stringify(loginResult.data));
+			setshowLoader(false)
+			router.push("/list")
+		} else {
+			message.error(loginResult.msg)
+			setshowLoader(false)
+		}
 	};
 
 	const onFinishFailed = (errorInfo) => {
@@ -40,6 +62,7 @@ export default function Home() {
 					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 					layout="vertical"
+					form={loginForm}
 				>
 					<Form.Item
 						label="ITS"
@@ -52,19 +75,6 @@ export default function Home() {
 						]}
 					>
 						<Input />
-					</Form.Item>
-
-					<Form.Item
-						label="Password"
-						name="password"
-						rules={[
-							{
-								required: true,
-								message: 'Please input your password!',
-							},
-						]}
-					>
-						<Input.Password />
 					</Form.Item>
 
 					<Form.Item

@@ -13,10 +13,12 @@
     "prettier:other": "prettier \"**/*.{md,css,scss,yaml,yml}\""
   },
   "dependencies": {
+    "airtable": "^0.11.2",
     "antd": "^4.19.3",
     "next": "12.0.7",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
