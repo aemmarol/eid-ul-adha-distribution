@@ -72,6 +72,10 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
                     <span className="text-xs">Room No</span>
                     <p className="text-sm">{fileValue.room_no}</p>
                 </Col>
+                <Col xs={12}>
+                    <span className="text-xs">Mobile Number</span>
+                    <p className="text-sm">{fileValue.mobile_no}</p>
+                </Col>
             </Row>
             <Form
                 name="deliveryStatus"
