@@ -44,10 +44,6 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
         setselectValue(e)
     }
 
-    useEffect(() => {
-        console.log("val", fileValue)
-    }, [])
-
     return (
         <Modal
             title="Update Delivery Status"

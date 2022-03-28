@@ -22,7 +22,7 @@ const ListPage = () => {
     const [fileDetails, setFileDetails] = useState([]);
     const [selectedFile, setSelectedFile] = useState({});
     const [showDeliveryModal, setShowDeliveryModal] = useState(false);
-    const [showLoader, setshowLoader] = useState(false);
+    const [displayLoader, setDisplayLoader] = useState(true);
 
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const ListPage = () => {
 
     const getFileListBySubSector = async (zone) => {
         const finalData = [];
-        setshowLoader(true)
+        setDisplayLoader(true)
         await fileTableList
             .select({
                 maxRecords: 1200,
@@ -61,10 +61,11 @@ const ListPage = () => {
 
             }, function done(err) {
                 setZoneDetails(finalData.map(val => ({ ...val.fields, id: val.id })));
+                setDisplayLoader(false)
+
                 if (err) { console.error(err); return; }
             })
 
-        setshowLoader(false)
     };
 
     const getFileDetails = (data) => {
@@ -99,7 +100,7 @@ const ListPage = () => {
                 <Button onClick={handleLogout} className="ml-4 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300">Logout</Button>
             </Header>
             {
-                showLoader ?
+                displayLoader ?
                     <div className="absolute z-50 top-0 left-0 w-screen h-screen bg-white/70 flex items-center justify-center" >
                         <Spin size="large" />
                     </div>
@@ -199,7 +200,11 @@ const ListPage = () => {
                                                         </Row>
                                                     </div>
                                                     <div className="ml-4">
-                                                        <Button onClick={() => handleShowDeliveryModal(val)} >Deliver</Button>
+                                                        <Button
+                                                            className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white border border-blue-500 hover:border-transparent rounded"
+                                                            disabled={val.status !== "Dispatched"} 
+                                                            onClick={() => handleShowDeliveryModal(val)}
+                                                        >Deliver</Button>
                                                     </div>
                                                 </div>
                                             </Card>
