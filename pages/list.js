@@ -1,4 +1,4 @@
-import { Button, Card, Col, Layout, Modal, Row, Spin } from "antd";
+import { Button, Card, Col, Input, Layout, Modal, Row, Spin } from "antd";
 import Head from "next/head"
 import { useEffect, useState } from "react";
 import { FiAlertCircle, FiXCircle, FiCheckCircle } from "react-icons/fi";
@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { DeliveryModal } from "../components/deliveryModal";
 
 const { Header, Content } = Layout;
-
 export class Status {
     // Create new instances of the same class as static attributes
     static dispatched = new Status("Dispatched");
@@ -31,6 +30,7 @@ const ListPage = () => {
     const [userDetails, setUserDetails] = useState({});
     const [zoneDetails, setZoneDetails] = useState([]);
     const [fileDetails, setFileDetails] = useState([]);
+    const [searchFileDetails, setSearchFileDetails] = useState([]);
     const [selectedFile, setSelectedFile] = useState({});
     const [showDeliveryModal, setShowDeliveryModal] = useState(false);
     const [displayLoader, setDisplayLoader] = useState(true);
@@ -83,6 +83,7 @@ const ListPage = () => {
     const getFileDetails = (data) => {
         let sectorFileData = data.filter(val => userDetails.assignedArea && userDetails.assignedArea.includes(val.subsector));
         setFileDetails(sectorFileData)
+        setSearchFileDetails(sectorFileData)
     }
 
     const handleShowDeliveryModal = (fileValue) => {
@@ -96,6 +97,14 @@ const ListPage = () => {
         if (user) {
             localStorage.clear();
             router.push("/")
+        }
+    }
+
+    const onSearch = (val) => {
+        if (!val.target.value) {
+            setSearchFileDetails(fileDetails)
+        } else {
+            setSearchFileDetails(fileDetails.filter(file => file.file_number.toString().includes(val.target.value)))
         }
     }
 
@@ -126,6 +135,15 @@ const ListPage = () => {
                         <p className="flex-grow text-xl mt-1">{userDetails && userDetails.assignedArea && userDetails.assignedArea.join(" , ")}
                         </p>
                     </div>
+                    <Input
+                        placeholder="input search text"
+                        allowClear
+                        onChange={onSearch}
+                        style={{
+                            width: "100%",
+                            marginBottom: "24px"
+                        }}
+                    />
                     <Row gutter={[16, 16]}>
                         <Col xs={12} md={8} lg={6} xl={4}>
                             <Card
@@ -226,7 +244,7 @@ const ListPage = () => {
                             <div key={area}>
                                 <h1 className="text-lg my-2">{area}</h1>
                                 {
-                                    fileDetails
+                                    searchFileDetails
                                         .filter(value => value.status === activeState)
                                         .filter(areaValue => areaValue.subsector === area)
                                         .map((val, index) => (
