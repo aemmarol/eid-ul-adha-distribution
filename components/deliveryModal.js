@@ -1,11 +1,12 @@
 import Airtable from "airtable";
-import { Button, Col, Form, Input, Modal, Row, Select } from "antd"
+import { Button, Col, Form, Input, Modal, Radio, Row, Select } from "antd"
 import { useEffect, useState } from "react";
+import { Status } from "../pages/list";
 
 export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callback }) => {
     const airtableUserBase = new Airtable({
         apiKey: process.env.NEXT_PUBLIC_AIRTABLE_API_KEY,
-    }).base("appinryr8YXqHWdt5");
+    }).base("app7KVWvJtVINBgNM");
     const fileTableList = airtableUserBase("File List");
 
     const [deliveryForm] = Form.useForm();
@@ -13,12 +14,14 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
     const [selectValue, setselectValue] = useState("")
 
     const onFinish = async (values) => {
-        console.log("values", values);
+        const user = JSON.parse(localStorage.getItem("eidUser"));
         let data = {
-            "status": values.status
+            "status": values.status,
+            "Delivered By": user.name || "",
+            "Delivered Contact": user.contact || ""
         }
-        if (values.returnMsg) {
-            data["reasonForReturn"] = values.returnMsg
+        if (values.collectMsg) {
+            data["Collected Notes"] = values.collectMsg
         }
         await fileTableList.update(
             [
@@ -41,7 +44,7 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
     }
 
     const handleSelectChange = (e) => {
-        setselectValue(e)
+        setselectValue(e.target.value)
     }
 
     return (
@@ -88,20 +91,20 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
                             message: 'Please select status',
                         },
                     ]} >
-                    <Select onChange={handleSelectChange} >
-                        <Select.Option value="Delivered">Delivered</Select.Option>
-                        <Select.Option value="Returned">Returned</Select.Option>
-                    </Select>
+                    <Radio.Group onChange={handleSelectChange} >
+                        <Radio value={Status.collected.status}>{Status.collected.status}</Radio>
+                        <Radio value={Status.notCollected.status}>{Status.notCollected.status}</Radio>
+                    </Radio.Group>
                 </Form.Item>
 
                 {
-                    selectValue === "Returned" ?
+                    selectValue === Status.collected.status ?
                         <Form.Item
-                            label="Reason for return"
-                            name="returnMsg"
+                            label="Collect notes"
+                            name="collectMsg"
                             rules={[
                                 {
-                                    required: true,
+                                    required: false,
                                     message: 'Please enter reason for return!',
                                 },
                             ]}
