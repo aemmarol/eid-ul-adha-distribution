@@ -186,7 +186,7 @@ const ListPage = () => {
                                 onClick={() => setActiveState(Status.collected.status)}
                                 className="p-0 rounded-lg"
                             >
-                                <p className="text-sm text-center mb-2">{Status.collected.status}</p>
+                                <p className="text-sm text-center mb-2">Delivered</p>
                                 <div className="flex">
                                     <div className="flex items-center justify-center w-12 text-5xl mr-4 text-amber-600">
                                         <FiCheckCircle />
@@ -214,7 +214,7 @@ const ListPage = () => {
                                 onClick={() => setActiveState(Status.notCollected.status)}
                                 className="p-0 rounded-lg"
                             >
-                                <p className="text-sm text-center mb-2">{Status.notCollected.status}</p>
+                                <p className="text-sm text-center mb-2">Not Delivered</p>
                                 <div className="flex">
                                     <div className="flex items-center justify-center w-12 text-5xl mr-4 text-red-600">
                                         <FiXCircle />

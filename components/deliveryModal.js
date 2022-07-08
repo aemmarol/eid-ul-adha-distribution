@@ -92,8 +92,8 @@ export const DeliveryModal = ({ showDeliveryModal, handleClose, fileValue, callb
                         },
                     ]} >
                     <Radio.Group onChange={handleSelectChange} >
-                        <Radio value={Status.collected.status}>{Status.collected.status}</Radio>
-                        <Radio value={Status.notCollected.status}>{Status.notCollected.status}</Radio>
+                        <Radio value={Status.collected.status}>Delivered</Radio>
+                        <Radio value={Status.notCollected.status}>Not Delivered</Radio>
                     </Radio.Group>
                 </Form.Item>
 
